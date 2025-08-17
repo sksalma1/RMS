@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dine-In Booking - RMS Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .navbar {
+      background-color: #1a2a44;
+      padding: 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .navbar .logo {
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+    .navbar .nav-links {
+      list-style: none;
+      display: flex;
+    }
+    .navbar .nav-links li {
+      margin-left: 2.5rem;
+    }
+    .navbar .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+    .navbar .nav-links a:hover {
+      color: #ff6f61;
+    }
+    .main-container {
+      max-width: 1200px;
+      margin: 100px auto 0;
+      padding: 2rem;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .section-header h1 {
+      font-size: 2.2rem;
+      color: #1a2a44;
+    }
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .card h3 {
+      font-size: 1.2rem;
+      color: #1a2a44;
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .price {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ff6f61;
+    }
+    .quantity-selector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .quantity-selector button {
+      background-color: #1a2a44;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .quantity-selector button:hover {
+      background-color: #ff6f61;
+    }
+    .quantity-selector span {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .book-btn {
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: block;
+      width: 40%;
+      margin: auto;
+    }
+    .book-btn:hover {
+      background-color: #d9534f;
+    }
+    footer {
+      background-color: #1a2a44;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+    .disabled-btn {
+      background-color: #ccc !important;
+      cursor: not-allowed;
+      color: #666;
+    }
+
+    footer a {
+      color: #ff6f61;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: #e65b50;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      .main-container {
+        padding: 1rem;
+      }
+      .section-header h1 {
+        font-size: 1.8rem;
+      }
+      .card-container {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 1rem;
+      }
+      .book-btn {
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">RMS</div>
+    <ul class="nav-links">
+      <li><a href="home.html">HOME</a></li>
+      <li><a href="menu.html">MENU</a></li>
+      <li><a href="offers.html">OFFERS</a></li>
+      <li><a href="cart.html">CART</a></li>
+      <li><a href="login.html">LOGOUT</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-container">
+    <!-- Dine-In Tables Section -->
+    <div class="section-header">
+      <h1>Dine-In Tables</h1>
+    </div>
+    <div class="card-container" id="table-container"></div>
+
+    <!-- Event Halls Section -->
+    <div class="section-header" style="margin-top: 3rem;">
+      <h1>Event Halls</h1>
+    </div>
+    <div class="card-container" id="eventhall-container"></div>
+  </div>
+
+  <footer>
+    <p>© 2025 Restaurant Management System. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+
+  <script>
+    window.onload = () => {
+      fetchTables();
+      fetchEventHalls();
+    };
+  
+    async function fetchTables() {
+      try {
+        const res = await fetch("http://localhost:5000/tables");
+        const tables = await res.json();
+        const container = document.getElementById("table-container");
+  
+        container.innerHTML = tables.map((table, index) => `
+          <div class="card">
+            <h3>${table.name}</h3>
+            <p>Capacity: ${table.capacity} people</p>
+            <p>AC: <span>${table.ac ? 'Yes' : 'No'}</span></p>
+            <p class="price">₹${table.pricePerHour} / hour</p>
+            <p>Available: ${table.available}</p>
+            <div class="quantity-selector">
+              <button onclick="changeQuantity('table-${index}', -1)" ${table.available === 0 ? 'disabled class="disabled-btn"' : ''}>-</button>
+              <span id="table-${index}">0</span>
+              <button onclick="changeQuantity('table-${index}', 1)" ${table.available === 0 ? 'disabled class="disabled-btn"' : ''}>+</button>
+            </div>
+            <button class="book-btn" onclick="bookNow('table-${index}', '${table._id}', '${table.name}', ${table.pricePerHour})" ${table.available === 0 ? 'disabled class="disabled-btn"' : ''}>Add To Cart</button>
+            </div>
+        `).join('');
+      } catch (err) {
+        console.error("Error loading tables:", err);
+      }
+    }
+  
+    async function fetchEventHalls() {
+      try {
+        const res = await fetch("http://localhost:5000/eventhalls");
+        const halls = await res.json();
+        const container = document.getElementById("eventhall-container");
+  
+        container.innerHTML = halls.map((hall, index) => `
+          <div class="card">
+            <img src="${hall.image}" alt="${hall.name}" style="width:100%; height:180px; border-radius:10px; object-fit:cover; margin-bottom:1rem;" />
+            <h3>${hall.name}</h3>
+            <p>Capacity: ${hall.capacity} people</p>
+            <p class="price">₹${hall.pricePerHour} / hour</p>
+            <p>Available: ${hall.available}</p>
+            <div class="quantity-selector">
+              <button onclick="changeQuantity('hall-${index}', -1)" ${hall.available === false ? 'disabled class="disabled-btn"' : ''}>-</button>
+              <span id="hall-${index}">0</span>
+              <button onclick="changeQuantity('hall-${index}', 1)" ${hall.available === false ? 'disabled class="disabled-btn"' : ''}>+</button>
+            </div>
+            <button class="book-btn" onclick="bookNow('hall-${index}', '${hall._id}', '${hall.name}', ${hall.pricePerHour})" ${hall.available === false ? 'disabled class="disabled-btn"' : ''}>Add To Cart</button>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error("Error loading event halls:", err);
+      }
+    }
+  
+    function changeQuantity(id, change) {
+      const span = document.getElementById(id);
+      let value = parseInt(span.innerText);
+      span.innerText = Math.max(0, value + change);
+    }
+  
+    async function bookNow(spanId, itemId, name, price) {
+      const quantity = parseInt(document.getElementById(spanId).innerText);
+      const userEmail = localStorage.getItem("userEmail");
+  
+      if (!userEmail) {
+          alert("You must be logged in to add to cart.");
+          window.location.href = "login.html";
+          return;
+      }
+  
+      if (quantity <= 0) {
+          alert("Please select at least one booking.");
+          return;
+      }
+  
+      const itemType = spanId.startsWith("table") ? "table" : "eventhall";
+  
+      const item = {
+          email: userEmail,
+          itemId: itemId,
+          name: name,
+          price: price,
+          quantity: quantity,
+          itemType: itemType
+      };
+  
+      try {
+          const res = await fetch("http://localhost:5000/cart/add", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(item)
+          });
+  
+          if (!res.ok) {
+              const errorData = await res.json();
+              throw new Error(errorData.message || "Failed to add item to cart.");
+          }
+  
+          const data = await res.json();
+          if (data.success) {
+              alert(`${name} added to cart successfully!`);
+              // Reset quantity
+              document.getElementById(spanId).innerText = "0";
+              // Refresh tables to update availability
+              fetchTables();
+          } else {
+              alert(`Failed to add item to cart: ${data.message || "Unknown error"}`);
+          }
+      } catch (err) {
+          console.error("Error adding to cart:", err);
+          alert(`Error adding item to cart: ${err.message}`);
+      }
+  }
+  </script>
+  
+</body>
+</html>

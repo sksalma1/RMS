@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Inventory - RMS Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+    .navbar {
+      background-color: #1a2a44;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .logo {
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .navbar .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar .nav-links li {
+      margin-left: 2rem;
+    }
+
+    .navbar .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      color: #ff6f61;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .search-container input {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 5px 0 0 5px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .search-container button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: #ff6f61;
+      color: #fff;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-container button:hover {
+      background-color: #e65b50;
+    }
+
+    .inventory-container {
+      max-width: 1200px;
+      margin: 80px auto 0;
+      padding: 2rem;
+    }
+
+    .inventory-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .inventory-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #1a2a44;
+    }
+
+    .inventory-header p {
+      font-size: 1rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section h2 {
+      font-size: 1.8rem;
+      color: #1a2a44;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #ff6f61;
+      padding-bottom: 0.5rem;
+    }
+
+    .item-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .inventory-item {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .inventory-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .inventory-item.out-of-stock {
+      background-color: #ffebee;
+      border: 2px solid #ef5350;
+    }
+
+    .inventory-item.low-stock {
+      background-color: #fff3e0;
+      border: 2px solid #ff9800;
+    }
+
+    .inventory-item h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .inventory-item p {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .inventory-item input {
+      width: 60px;
+      padding: 0.2rem;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .inventory-item button {
+      background-color: #ff6f61;
+      color: #fff;
+      padding: 0.3rem 0.7rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .inventory-item button:hover {
+      background-color: #e65b50;
+    }
+
+    .message {
+      text-align: center;
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .message.error {
+      color: #dc3545;
+    }
+
+    .message.notification {
+      color: #ff9800;
+      font-weight: bold;
+    }
+
+    footer {
+      background-color: #1a2a44;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      font-weight: 300;
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: #ff6f61;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #e65b50;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+
+      .navbar .nav-links li {
+        margin-left: 1rem;
+      }
+
+      .item-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .search-container input {
+        width: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      .navbar .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+      }
+
+      .navbar .nav-links li {
+        margin: 0.5rem 0;
+      }
+
+      .search-container {
+        margin-top: 1rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .search-container input {
+        width: 70%;
+      }
+
+      .item-list {
+        grid-template-columns: 1fr;
+      }
+
+      .inventory-header h1 {
+        font-size: 2rem;
+      }
+
+      .section h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">RMS Admin</div>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search items...">
+      <button onclick="searchItems()">Search</button>
+    </div>
+    <ul class="nav-links">
+      <li><a href="admin_home.html">HOME</a></li>
+      <li><a href="admin_menu.html">MENU</a></li>
+      <li><a href="admin_tables.html">TABLES</a></li>
+      <li><a href="inventory.html">INVENTORY</a></li>
+      <li><a href="admin_events.html">EVENT HALLS</a></li>
+      <li><a href="#" onclick="logout()">LOGOUT</a></li>
+    </ul>
+  </nav>
+
+  <div class="inventory-container">
+    <div class="inventory-header">
+      <h1>Inventory Management</h1>
+      <p>View and Update Menu Item Quantities</p>
+    </div>
+
+    <!-- Notifications Section -->
+    <div id="lowStockNotification" class="message notification" style="display: none;"></div>
+    <p id="menuMessage" class="message"></p>
+
+    <!-- Menu Items Section -->
+    <div class="section">
+      <h2>Menu Items</h2>
+      <div id="menuList" class="item-list"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Restaurant Management System. All rights reserved. | 
+      <a href="#">Privacy Policy</a> | 
+      <a href="#">Terms of Service</a>
+    </p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    const API_BASE = 'http://localhost:5001';
+    const adminEmail = localStorage.getItem('adminEmail') || '';
+
+    function showMessage(elementId, message, isError = false) {
+      const element = $(`#${elementId}`);
+      element.text(message).removeClass('error notification').addClass(isError ? 'error' : 'notification');
+      if (!isError) element.show(); // Show non-error messages
+      setTimeout(() => {
+        if (!isError) element.hide(); // Hide after 5 seconds for notifications
+      }, 5000);
+    }
+
+    async function makeRequest(method, url, data = {}) {
+      console.log(`Making ${method} request to ${url} with adminEmail: ${adminEmail}`, data);
+      try {
+        const response = await $.ajax({
+          url: `${API_BASE}${url}`,
+          method,
+          headers: { 'x-admin-email': adminEmail },
+          contentType: 'application/json',
+          data: JSON.stringify(data)
+        });
+        console.log('Request successful:', response);
+        return response;
+      } catch (xhr) {
+        console.error('Request failed:', xhr.responseJSON?.message || xhr.statusText);
+        throw new Error(xhr.responseJSON?.message || 'Request failed');
+      }
+    }
+
+    async function loadMenuItems(searchTerm = '') {
+      try {
+        const items = await makeRequest('GET', '/admin/menu');
+        console.log('Menu items received:', items);
+        const menuList = $('#menuList').empty();
+        const lowStockItems = [];
+
+        if (!items || items.length === 0) {
+          showMessage('menuMessage', 'No menu items available. Add items in Menu Management.', true);
+          return;
+        }
+
+        const filteredItems = searchTerm 
+          ? items.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+          : items;
+
+        if (filteredItems.length === 0) {
+          showMessage('menuMessage', 'No items match your search.', true);
+          return;
+        }
+
+        filteredItems.forEach(item => {
+          const isOutOfStock = item.quantity <= 0;
+          const isLowStock = item.quantity > 0 && item.quantity < 10;
+          if (isLowStock) lowStockItems.push(item.name);
+
+          const card = `
+            <div class="inventory-item ${isOutOfStock ? 'out-of-stock' : ''} ${isLowStock ? 'low-stock' : ''}" data-id="${item._id}">
+              <h3>${item.name}</h3>
+              <p>Category: ${item.category}</p>
+              <p>Price: ${item.price}</p>
+              <p>Quantity: ${item.quantity}</p>
+              <input type="number" id="qty-${item._id}" value="${item.quantity}" min="0">
+              <button onclick="updateStock('${item._id}')">Update Stock</button>
+            </div>`;
+          menuList.append(card);
+        });
+
+        if (lowStockItems.length > 0) {
+          showMessage('lowStockNotification', `Warning: Low stock for items: ${lowStockItems.join(', ')} (quantity < 10)`);
+        } else {
+          $('#lowStockNotification').hide();
+        }
+      } catch (err) {
+        showMessage('menuMessage', `Failed to load menu items: ${err.message}`, true);
+      }
+    }
+
+    async function updateStock(itemId) {
+      const newQuantity = parseInt($('#qty-' + itemId).val());
+      if (isNaN(newQuantity) || newQuantity < 0) {
+        showMessage('menuMessage', 'Please enter a valid non-negative quantity.', true);
+        return;
+      }
+
+      try {
+        const response = await makeRequest('PUT', `/admin/menu/update-stock/${itemId}`, { quantity: newQuantity });
+        showMessage('menuMessage', response.message);
+        loadMenuItems($('#searchInput').val()); // Refresh with current search term
+      } catch (err) {
+        showMessage('menuMessage', `Failed to update stock: ${err.message}`, true);
+      }
+    }
+
+    function searchItems() {
+      const searchTerm = $('#searchInput').val();
+      loadMenuItems(searchTerm);
+    }
+
+    async function logout() {
+      try {
+        await $.post(`${API_BASE}/admin/logout`);
+        localStorage.removeItem('adminEmail');
+        window.location.href = '/admin-login.html';
+      } catch (err) {
+        alert('Logout failed: ' + err.message);
+      }
+    }
+
+    $(document).ready(() => {
+      if (!adminEmail) {
+        console.log('No adminEmail found, redirecting to login');
+        alert('Please log in as admin.');
+        window.location.href = 'admin_login.html';
+        return;
+      }
+      console.log('Page loaded, fetching menu items');
+      loadMenuItems();
+
+      // Trigger search on Enter key
+      $('#searchInput').on('keypress', function(e) {
+        if (e.which === 13) {
+          searchItems();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant Menu - RMS Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+    .navbar {
+      background-color: #1a2a44;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .logo {
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .navbar .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar .nav-links li {
+      margin-left: 2rem;
+    }
+
+    .navbar .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      color: #ff6f61;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .search-container input {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 5px 0 0 5px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .search-container button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: #ff6f61;
+      color: #fff;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-container button:hover {
+      background-color: #e65b50;
+    }
+
+    .menu-container {
+      max-width: 1200px;
+      margin: 80px auto 0;
+      padding: 2rem;
+    }
+
+    .restaurant-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .restaurant-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #1a2a44;
+    }
+
+    .restaurant-header p {
+      font-size: 1rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+
+    .category-section {
+      margin-bottom: 2rem;
+    }
+
+    .category-section.hidden {
+      display: none;
+    }
+
+    .category-section h2 {
+      font-size: 1.8rem;
+      color: #1a2a44;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #ff6f61;
+      padding-bottom: 0.5rem;
+    }
+
+    .menu-items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .menu-item {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      padding: 1rem;
+      width: 100%;
+      text-align: center;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .menu-item.hidden {
+      display: none;
+    }
+
+    .menu-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 0 auto 10px;
+    }
+
+    .item-details h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .original-price {
+      font-size: 0.9rem;
+      color: #666;
+      text-decoration: line-through;
+      margin-bottom: 5px;
+    }
+
+    .price {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ff6f61;
+      margin-bottom: 10px;
+    }
+
+    .add-to-cart {
+      background-color: #ff6f61;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    .add-to-cart:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    .add-to-cart:hover:not(:disabled) {
+      background-color: #e65b50;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #666;
+      padding: 2rem;
+    }
+
+    footer {
+      background-color: #1a2a44;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      font-weight: 300;
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: #ff6f61;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #e65b50;
+    }
+
+    #cartTotal {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #1a2a44;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+
+      .navbar .nav-links li {
+        margin-left: 1rem;
+      }
+
+      .search-container input {
+        width: 120px;
+      }
+
+      .menu-items {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      .navbar .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+      }
+
+      .navbar .nav-links li {
+        margin: 0.5rem 0;
+      }
+
+      .search-container {
+        margin-top: 1rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .search-container input {
+        width: 70%;
+      }
+
+      .menu-items {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-item {
+        width: 100%;
+      }
+
+      .restaurant-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">RMS</div>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search menu items">
+      <button onclick="filterMenu()">Search</button>
+    </div>
+    <ul class="nav-links">
+      <li><a href="home.html">HOME</a></li>
+      <li><a href="dinein.html">DINE IN</a></li>
+      <li><a href="offers.html">OFFERS</a></li>
+      <li><a href="cart.html">CART</a></li>
+      <li><a href="#" onclick="logout()">LOGOUT</a></li>
+    </ul>
+  </nav>
+
+  <div class="menu-container">
+    <div class="restaurant-header">
+      <h1>The Flavor Haven</h1>
+      <p>North Indian | Chinese | Fast Food | Open: 11 AM - 11 PM</p>
+    </div>
+
+    <div id="menu-list" class="loading">Loading menu...</div>
+
+    <div id="cartTotal"></div>
+  </div>
+
+  <footer>
+    <p>© 2025 Restaurant Management System. All rights reserved. | 
+      <a href="#">Privacy Policy</a> | 
+      <a href="#">Terms of Service</a>
+    </p>
+  </footer>
+
+  <script>
+    let allMenuItems = [];
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        alert("Please log in to view the menu.");
+        window.location.href = "login.html";
+        return;
+      }
+      fetchMenu();
+      updateCartTotal();
+    });
+
+    async function fetchMenu() {
+      const menuContainer = document.getElementById("menu-list");
+      if (!menuContainer) {
+        console.error("Error: 'menu-list' container not found in HTML.");
+        menuContainer.innerHTML = "<p>Internal error: Menu container not found.</p>";
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:5000/menu");
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`HTTP error! status: ${res.status}, message: ${errorText || res.statusText}`);
+        }
+        const menuItems = await res.json();
+        allMenuItems = menuItems;
+
+        if (menuItems.length === 0) {
+          menuContainer.innerHTML = "<p>No menu items available at the moment.</p>";
+          return;
+        }
+
+        const groupedItems = menuItems.reduce((acc, item) => {
+          const category = item.category || "Uncategorized";
+          if (!acc[category]) acc[category] = [];
+          acc[category].push(item);
+          return acc;
+        }, {});
+
+        menuContainer.innerHTML = "";
+
+        Object.keys(groupedItems).forEach(category => {
+          const categorySection = document.createElement("div");
+          categorySection.classList.add("category-section");
+          categorySection.dataset.category = category.toLowerCase();
+
+          const categoryTitle = document.createElement("h2");
+          categoryTitle.textContent = category;
+          categorySection.appendChild(categoryTitle);
+
+          const itemsContainer = document.createElement("div");
+          itemsContainer.classList.add("menu-items");
+
+          groupedItems[category].forEach(item => {
+            const menuItemDiv = document.createElement("div");
+            menuItemDiv.classList.add("menu-item");
+            menuItemDiv.dataset.name = item.name.toLowerCase();
+            menuItemDiv.dataset.category = category.toLowerCase();
+            menuItemDiv.dataset.id = item._id;
+
+            const itemPrice = item.price || 0;
+            const offerPrice = item.offerPrice !== null && !isNaN(item.offerPrice) && item.offerPrice > 0 ? item.offerPrice : null;
+            const effectivePrice = offerPrice !== null ? offerPrice : itemPrice;
+            const itemQuantity = item.quantity !== undefined ? item.quantity : 0;
+            const isOutOfStock = itemQuantity <= 0;
+
+            console.log(`Displayed Item: ${item.name}, Price: ${effectivePrice}, Quantity: ${itemQuantity}, _id: ${item._id}`);
+
+            menuItemDiv.innerHTML = `
+              <img src="${item.image || 'fallback.jpg'}" alt="${item.name}" onerror="this.src='fallback.jpg';" />
+              <div class="item-details">
+                <h3>${item.name}</h3>
+                ${offerPrice !== null && itemPrice > 0 ? `
+                  <p class="original-price">₹${itemPrice.toFixed(2)}</p>
+                  <p class="price">₹${effectivePrice.toFixed(2)}</p>
+                ` : `
+                  <p class="price">₹${effectivePrice.toFixed(2)}</p>
+                `}
+                <button class="add-to-cart"
+                  data-id="${item._id}"
+                  data-name="${encodeURIComponent(item.name)}"
+                  data-price="${isOutOfStock ? 0 : effectivePrice}"
+                  ${isOutOfStock ? 'disabled' : ''}>
+                  ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                </button>
+              </div>
+            `;
+
+            itemsContainer.appendChild(menuItemDiv);
+          });
+
+          categorySection.appendChild(itemsContainer);
+          menuContainer.appendChild(categorySection);
+        });
+
+        // Add click event listeners to menu items
+        document.querySelectorAll(".menu-item").forEach(item => {
+          item.addEventListener("click", function(e) {
+            // Prevent click on buttons from triggering item filter
+            if (e.target.classList.contains("add-to-cart")) return;
+            filterByItem(this.dataset.id, this.dataset.category);
+          });
+        });
+
+        // Re-attach Add to Cart button listeners
+        document.querySelectorAll(".add-to-cart").forEach(button => {
+          button.addEventListener("click", function() {
+            const itemId = this.getAttribute("data-id");
+            const itemName = decodeURIComponent(this.getAttribute("data-name"));
+            const itemPrice = Number(this.getAttribute("data-price"));
+            if (itemPrice <= 0) {
+              alert("Item is out of stock or has an invalid price.");
+              return;
+            }
+            addToCart(itemId, itemName, itemPrice);
+          });
+        });
+
+      } catch (error) {
+        console.error("Error fetching menu:", error);
+        menuContainer.innerHTML = `<p>Failed to load menu. Please check your connection and try again. Error: ${error.message}</p>`;
+      }
+    }
+
+    function filterMenu() {
+      const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+      const categorySections = document.querySelectorAll(".category-section");
+      const menuItems = document.querySelectorAll(".menu-item");
+
+      if (!searchTerm) {
+        // Show all categories and items when search is cleared
+        categorySections.forEach(section => {
+          section.classList.remove("hidden");
+        });
+        menuItems.forEach(item => {
+          item.classList.remove("hidden");
+        });
+        return;
+      }
+
+      let foundCategory = false;
+      let foundItem = false;
+
+      // Check if search term matches a category
+      categorySections.forEach(section => {
+        const category = section.dataset.category;
+        if (category.includes(searchTerm)) {
+          section.classList.remove("hidden");
+          section.querySelectorAll(".menu-item").forEach(item => {
+            item.classList.remove("hidden");
+          });
+          foundCategory = true;
+        } else {
+          section.classList.add("hidden");
+        }
+      });
+
+      // If no category match, check for item matches
+      if (!foundCategory) {
+        categorySections.forEach(section => {
+          const items = section.querySelectorAll(".menu-item");
+          let hasVisibleItem = false;
+          items.forEach(item => {
+            const itemName = item.dataset.name;
+            if (itemName.includes(searchTerm)) {
+              item.classList.remove("hidden");
+              hasVisibleItem = true;
+              foundItem = true;
+            } else {
+              item.classList.add("hidden");
+            }
+          });
+          section.classList.toggle("hidden", !hasVisibleItem);
+        });
+      }
+
+      // If no matches found, show all categories with no items
+      if (!foundCategory && !foundItem) {
+        categorySections.forEach(section => {
+          section.classList.remove("hidden");
+          section.querySelectorAll(".menu-item").forEach(item => {
+            item.classList.add("hidden");
+          });
+        });
+      }
+    }
+
+    function filterByItem(itemId, itemCategory) {
+      const categorySections = document.querySelectorAll(".category-section");
+      const menuItems = document.querySelectorAll(".menu-item");
+
+      categorySections.forEach(section => {
+        const category = section.dataset.category;
+        if (category === itemCategory) {
+          section.classList.remove("hidden");
+          section.querySelectorAll(".menu-item").forEach(item => {
+            if (item.dataset.id === itemId) {
+              item.classList.remove("hidden");
+            } else {
+              item.classList.add("hidden");
+            }
+          });
+        } else {
+          section.classList.add("hidden");
+        }
+      });
+    }
+
+    async function addToCart(itemId, itemName, itemPrice) {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        alert("Please log in first!");
+        window.location.href = "login.html";
+        return;
+      }
+    
+      if (isNaN(itemPrice) || itemPrice <= 0) {
+        console.error("Invalid price detected:", itemPrice);
+        alert("Error: Item price is invalid or missing.");
+        return;
+      }
+    
+      try {
+        const res = await fetch("http://localhost:5000/cart/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            itemId,
+            name: itemName,
+            price: itemPrice,
+            quantity: 1, // Default quantity for menu items
+            itemType: "menu" // Explicitly specify itemType
+          })
+        });
+    
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(`Failed to add item: ${errorData.message || res.statusText}`);
+        }
+        const data = await res.json();
+    
+        if (data.success) {
+          alert(`${itemName} added to cart successfully!`);
+          updateCartTotal();
+        } else {
+          alert("Error adding item to cart: " + (data.message || "Unknown error"));
+        }
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        alert(`Failed to add item to cart: ${error.message}`);
+      }
+    }
+
+    async function updateCartTotal() {
+      const email = localStorage.getItem("userEmail");
+      if (!email) return;
+
+      try {
+        const res = await fetch(`http://localhost:5000/cart/${email}`);
+        if (!res.ok) throw new Error(`Failed to fetch cart total: ${res.statusText}`);
+
+        const data = await res.json();
+        const cartTotalElement = document.getElementById("cartTotal");
+        if (cartTotalElement) {
+          cartTotalElement.innerText = `Total Cost: ₹${Number(data.totalCost || 0).toFixed(2)}`;
+        }
+      } catch (error) {
+        console.error("Error fetching cart total:", error);
+        const cartTotalElement = document.getElementById("cartTotal");
+        if (cartTotalElement) cartTotalElement.innerText = "Total Cost: ₹0.00";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("userEmail");
+      alert("Logged out successfully!");
+      window.location.href = "login.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        alert("Please log in to view the menu.");
+        window.location.href = "login.html";
+        return;
+      }
+      fetchMenu();
+      updateCartTotal();
+      // Add Enter key and input listeners for search
+      const searchInput = document.getElementById("searchInput");
+      searchInput.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          filterMenu();
+        }
+      });
+      searchInput.addEventListener("input", filterMenu);
+    });
+  </script>
+</body>
+</html>

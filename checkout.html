@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - RMS Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1 0 auto;
+    }
+
+    .navbar {
+      background-color: #1a2a44;
+      padding: 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      position: fixed;
+    }
+
+    .navbar .logo {
+      color: white;
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    .navbar .nav-links {
+      list-style: none;
+      display: flex;
+    }
+
+    .navbar .nav-links li {
+      margin-left: 2.5rem;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .checkout-container {
+      max-width: 900px;
+      margin: 100px auto 50px;
+      padding: 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkout-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #1a2a44;
+    }
+
+    .checkout-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #ff6f61;
+    }
+
+    .total-section {
+      text-align: right;
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .confirm-btn {
+      display: block;
+      width: 100%;
+      background: #1a2a44;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      margin-top: 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    .confirm-btn:hover {
+      background: #ff6f61;
+    }
+
+    .payment-confirmation {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #e0f7fa;
+      border-radius: 5px;
+    }
+
+    .card-payment {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #fff3e0;
+      border-radius: 5px;
+    }
+
+    .card-payment input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .upi-payment {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #e8f5e9;
+      border-radius: 5px;
+    }
+
+    footer {
+      background-color: #1a2a44;
+      color: #fff;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 300;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    footer a {
+      color: #ff6f61;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #e65b50;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">RMS</div>
+    <ul class="nav-links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="dinein.html">Dine In</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="checkout-container">
+      <h1 class="checkout-title">Checkout</h1>
+      <form class="checkout-form" id="checkout-form">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="address">Delivery Address</label>
+          <input type="text" id="address" name="address" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required />
+        </div>
+        <div class="form-group">
+          <label for="payment">Payment Method</label>
+          <select id="payment" name="payment" required>
+            <option value="">Select Payment Method</option>
+            <option value="cod">Cash on Delivery</option>
+            <option value="card">Credit/Debit Card</option>
+            <option value="upi">UPI</option>
+          </select>
+        </div>
+        <div class="total-section">Total: ₹<span id="total-price">0.00</span></div>
+        <button type="submit" class="confirm-btn">Confirm Order</button>
+      </form>
+
+      <!-- Payment Confirmation Message -->
+      <div class="payment-confirmation" id="payment-confirmation">
+        <h3>Order Confirmed!</h3>
+        <p>Your order will be processed. Please wait for delivery.</p>
+      </div>
+
+      <!-- Card Payment Interface -->
+      <div class="card-payment" id="card-payment">
+        <h3>Enter Card Details</h3>
+        <input type="text" placeholder="Card Number" required />
+        <input type="text" placeholder="Expiry Date (MM/YY)" required />
+        <input type="text" placeholder="CVV" required />
+        <button class="confirm-btn" onclick="processCardPayment()">Pay Now</button>
+      </div>
+
+      <!-- UPI Payment Interface -->
+      <div class="upi-payment" id="upi-payment">
+        <h3>Scan to Pay with UPI</h3>
+        <p>Please use the UPI app to scan the QR code below or enter your UPI ID.</p>
+        <p>UPI ID: rms.order@xyz</p>
+        <button class="confirm-btn" onclick="processUpiPayment()">Confirm Payment</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Restaurant Management System. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+
+  <script>
+    async function loadCheckout() {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        alert("Please log in first!");
+        window.location.href = "login.html";
+        return;
+      }
+  
+      try {
+        const res = await fetch(`http://localhost:5000/cart/${email}`);
+        if (!res.ok) throw new Error(`Failed to fetch cart data: ${res.statusText}`);
+  
+        const cartData = await res.json();
+        const totalPriceElement = document.getElementById("total-price");
+  
+        if (!cartData.items || cartData.items.length === 0) {
+          totalPriceElement.innerText = "0.00";
+          alert("Your cart is empty. Please add items before checking out.");
+          window.location.href = "menu.html";
+          return;
+        }
+  
+        totalPriceElement.innerText = cartData.totalCost.toFixed(2);
+      } catch (error) {
+        console.error("Error loading checkout:", error);
+        alert("Failed to load checkout data. Please try again.");
+      }
+    }
+  
+    document.getElementById("checkout-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = localStorage.getItem("userEmail");
+      if (!email) return;
+  
+      const formData = {
+        name: document.getElementById("name").value,
+        address: document.getElementById("address").value,
+        phone: document.getElementById("phone").value,
+        payment: document.getElementById("payment").value,
+      };
+  
+      if (!formData.payment) {
+        alert("Please select a payment method.");
+        return;
+      }
+  
+      try {
+        const res = await fetch(`http://localhost:5000/order`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+  
+        if (!res.ok) throw new Error(`Failed to place order: ${res.statusText}`);
+  
+        // Hide the form
+        document.querySelector(".checkout-form").style.display = "none";
+        const paymentMethod = formData.payment;
+        const totalCost = parseFloat(document.getElementById("total-price").innerText);
+  
+        if (paymentMethod === "cod") {
+          document.getElementById("payment-confirmation").style.display = "block";
+          setTimeout(() => {
+            alert("Order placed successfully with Cash on Delivery!");
+            window.location.href = "home.html";
+          }, 2000);
+        } else if (paymentMethod === "card") {
+          document.getElementById("card-payment").style.display = "flex";
+        } else if (paymentMethod === "upi") {
+          const upiPaymentDiv = document.getElementById("upi-payment");
+          upiPaymentDiv.style.display = "block";
+  
+          // Dynamic UPI ID (you can customize this or fetch from backend)
+          const upiId = `${formData.phone}@mbl`; // Example: Using phone number as UPI ID base
+          const merchantName = "RMS Order";
+          const transactionNote = "RMS Food Order";
+          const currency = "INR";
+  
+          // UPI Intent URL for Google Pay, PhonePe, etc.
+          const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(merchantName)}&am=${totalCost.toFixed(2)}&cu=${currency}&tn=${encodeURIComponent(transactionNote)}`;
+  
+          // Update UPI payment interface with options
+          upiPaymentDiv.innerHTML = `
+            <h3>Pay with UPI</h3>
+            <p>Use any UPI app (Google Pay, PhonePe, etc.) to complete the payment:</p>
+            <p><strong>UPI ID:</strong> ${upiId}</p>
+            <p><strong>Amount:</strong> ₹${totalCost.toFixed(2)}</p>
+            <button class="confirm-btn" onclick="window.location.href='${upiLink}'">Pay with UPI App</button>
+            <p>OR manually enter the UPI ID in your app.</p>
+          `;
+  
+          // Optional: Auto-redirect to UPI app (uncomment if desired)
+          // window.location.href = upiLink;
+  
+          // Fallback: Redirect to home after a timeout (assuming payment will be confirmed manually)
+          setTimeout(() => {
+            alert("Please complete the payment in your UPI app. Redirecting to home...");
+            window.location.href = "home.html";
+          }, 30000); // 30 seconds timeout
+        }
+      } catch (error) {
+        console.error("Error placing order:", error);
+        alert("Failed to place order. Please try again.");
+      }
+    });
+  
+    function processCardPayment() {
+      alert("Card payment processed successfully!");
+      window.location.href = "home.html";
+    }
+  
+    function processUpiPayment() {
+      alert("UPI payment confirmed!");
+      window.location.href = "home.html";
+    }
+  
+    document.addEventListener("DOMContentLoaded", loadCheckout);
+  </script>
+  
+</body>
+</html>

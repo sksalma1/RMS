@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: right;
+            min-height: 100vh;
+            padding: 10px;
+            gap: 20px;
+        }
+        
+        /* Background Image Container */
+        .img-con {
+            flex: 1;
+            position: relative;
+            background: url("food.jpg") no-repeat center center/cover;
+            border-radius: 25px;
+        }
+        
+        /* Adding blur effect */
+        .img-con::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(4px); /* Removed blur effect */
+        }
+        
+        /* Signup Form Styling */
+        .container {
+            width: 100%;
+            max-width: 630px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(rgb(169, 169, 233), rgb(218, 141, 154), rgb(199, 117, 199));
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+        }
+        
+        /* Heading */
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        /* Input Container */
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        
+        .io {
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: 0.3s;
+        }
+        
+        .io:focus {
+            outline: none; /* Removes the default focus outline */
+            border-bottom: 1px solid white; /* Changes border color when focused */
+        }
+        
+        /* Checkbox Container */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: white;
+            margin-top: 8px;
+        }
+        
+        /* Button Styling */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, rgb(178, 79, 178), rgb(243, 131, 149));
+            width: 200px;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 40px;
+            border: none;
+            transition: 0.3s;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Button Hover Effect */
+        .btn:hover {
+            background: linear-gradient(45deg, rgb(143, 56, 143), rgb(218, 104, 123));
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Signup Link */
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .signup-link a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        .signup-link a:hover {
+            color: #e0e0e0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+        
+            .img-con {
+                display: none;
+            }
+        
+            .container {
+                width: 90%;
+                height: auto;
+                padding: 20px;
+            }
+        }        
+    </style>
+</head>
+<body>
+    <div class="img-con"></div>
+    <div class="container">
+        <h1>Sign Up</h1>
+
+        <div class="input-container">
+            <label for="name">Name</label>
+            <input class="io" type="text" id="name" placeholder="Enter your name">
+        </div>
+
+        <div class="input-container">
+            <label for="phone">Phone Number</label>
+            <input class="io" type="text" id="phone" placeholder="Enter your mobile number">
+        </div>
+
+        <div class="input-container">
+            <label for="email">Email</label>
+            <input class="io" type="email" id="email" placeholder="Enter your email">
+        </div>
+
+        <div class="input-container">
+            <label for="address">Address</label>
+            <input class="io" type="text" id="address" placeholder="Enter your address">
+        </div>
+
+        <div class="input-container">
+            <label for="password">Password</label>
+            <input class="io" type="password" id="password" placeholder="Enter your password">
+        </div>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="terms">
+            <label for="terms">I agree to the Terms of Use</label>
+        </div>
+
+        <div class="btn-container">
+            <input type="submit" class="btn" value="Sign Up">
+        </div>
+        <div class="signup-link">
+            Already have an Account? <a href="login.html">Login</a>
+        </div>
+    </div>
+    <script>
+        // Sign-Up function
+        async function signUp() {
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const termsAccepted = document.getElementById("terms").checked;
+    
+            if (!name || !phone || !email || !address || !password) {
+                alert("Please fill in all fields!");
+                return;
+            }
+    
+            if (!termsAccepted) {
+                alert("You must agree to the Terms of Use!");
+                return;
+            }
+    
+            try {
+                const response = await fetch("http://localhost:5000/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, phone, email, address, password })
+                });
+    
+                const data = await response.json();
+                alert(data.message);
+    
+                if (response.ok) {
+                    // Redirect to login page after successful sign-up
+                    window.location.href = "login.html"; // Redirect to login page
+                }
+            } catch (error) {
+                console.error("Sign-up error:", error);
+                alert("Error signing up. Please check your connection and try again.");
+            }
+        }
+    
+        // Add event listener to sign-up button
+        document.querySelector(".btn").addEventListener("click", (e) => {
+            e.preventDefault();  // Prevent form submission
+            signUp();
+        });
+    
+        // Optional: Handle Enter key press for form submission
+        document.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                document.querySelector(".btn").click();  // Trigger the sign-up button click
+            }
+        });
+    </script>    
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Manage Offers - RMS Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+    .navbar {
+      background-color: #1a2a44;
+      padding: 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .logo {
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .navbar .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar .nav-links li {
+      margin-left: 2.5rem;
+    }
+
+    .navbar .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      color: #ff6f61;
+    }
+
+    .offers-container {
+      max-width: 1200px;
+      margin: 80px auto 0;
+      padding: 2rem;
+    }
+
+    .restaurant-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .restaurant-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #1a2a44;
+    }
+
+    .form-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .form-container select,
+    .form-container input {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .form-container input:disabled {
+      background-color: #f0f0f0;
+      color: #666;
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #ff6f61;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-container button:hover {
+      background-color: #e65b50;
+    }
+
+    .offer-items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .offer-item {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      padding: 1rem;
+      width: 80%;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .offer-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .offer-item h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .original-price {
+      font-size: 1rem;
+      color: #666;
+      text-decoration: line-through;
+      margin-bottom: 5px;
+    }
+
+    .offer-price {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ff6f61;
+      margin-bottom: 10px;
+    }
+
+    .offer-item button {
+      background-color: #ff6f61;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .offer-item button:hover {
+      background-color: #e65b50;
+    }
+
+    footer {
+      background-color: #1a2a44;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      font-weight: 300;
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: #ff6f61;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #e65b50;
+    }
+
+    @media (max-width: 768px) {
+      .offer-items {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .offer-items {
+        grid-template-columns: 1fr;
+      }
+      .offer-item {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">RMS Admin</div>
+    <ul class="nav-links">
+      <li><a href="admin_home.html">HOME</a></li>
+      <li><a href="admin_menu.html">MENU</a></li>
+      <li><a href="admin_tables.html">TABLES</a></li>
+      <li><a href="admin_events.html">Event Halls</a></li>
+      <li><a href="inventory.html">INVENTORY</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="offers-container">
+    <div class="restaurant-header">
+      <h1>Manage Offers</h1>
+    </div>
+
+    <div class="form-container">
+      <h2>Add New Offer</h2>
+      <select id="itemId" onchange="fetchItemPrice()">
+        <option value="">Select Menu Item</option>
+      </select>
+      <input type="number" id="originalPrice" placeholder="Original Price (auto-filled)" disabled>
+      <input type="number" id="offerPrice" placeholder="Offer Price" step="0.01" required>
+      <button onclick="addOffer()">Add Offer</button>
+    </div>
+
+    <div id="offer-list" class="offer-items"></div>
+  </div>
+
+  <footer>
+    <p>© 2025 Restaurant Management System. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+
+  <script>
+    const email = localStorage.getItem("adminEmail");
+    if (!email) window.location.href = "admin_login.html";
+  
+    async function fetchMenuItemsForDropdown() {
+      try {
+        const res = await fetch("http://localhost:5000/menu");
+        if (!res.ok) throw new Error(`Failed to fetch menu: ${res.statusText}`);
+        const items = await res.json();
+        const select = document.getElementById("itemId");
+        select.innerHTML = '<option value="">Select Menu Item</option>';
+        items.forEach(item => {
+          const option = document.createElement("option");
+          option.value = item._id;
+          option.textContent = `${item.name} (${item.category})`;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error fetching menu items for dropdown:", error);
+        alert("Failed to load menu items. Please try again.");
+      }
+    }
+  
+    async function fetchItemPrice() {
+      const itemSelect = document.getElementById("itemId");
+      const originalPriceInput = document.getElementById("originalPrice");
+      const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+      const itemName = selectedOption.textContent.split(" (")[0]; // Extract name before category
+      if (!itemName || itemName === "Select Menu Item") {
+        originalPriceInput.value = "";
+        return;
+      }
+      try {
+        console.log(`Fetching price for item name: ${itemName}`); // Debug log
+        const encodedItemName = encodeURIComponent(itemName);
+        const res = await fetch(`http://localhost:5000/menu/name/${encodedItemName}`, {
+          headers: { "x-admin-email": email }
+        });
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}, ${res.statusText}`);
+        }
+        const item = await res.json();
+        console.log("Fetched item data:", item); // Debug log
+    
+        // Use the price directly from the response, with fallback warning
+        const price = parseFloat(item.price || 0);
+        originalPriceInput.value = isNaN(price) ? "" : price.toFixed(2);
+        if (isNaN(price) || price === 0) {
+          console.warn("Price is invalid or 0 for item:", item);
+          alert("Warning: The original price is invalid or missing. Please update the item in the database or check the server response.");
+        }
+      } catch (error) {
+        console.error("Error fetching item price:", error);
+        originalPriceInput.value = "";
+        alert("Failed to fetch original price. Please ensure the server is running and the item exists.");
+      }
+    }
+  
+    async function fetchOffers() {
+      const offerList = document.getElementById("offer-list");
+      try {
+        const res = await fetch("http://localhost:5001/admin/offers", {
+          headers: { "x-admin-email": email }
+        });
+        if (!res.ok) throw new Error(`Failed to fetch offers: ${res.statusText}`);
+        const offers = await res.json();
+        offerList.innerHTML = "";
+        if (offers.length === 0) {
+          offerList.innerHTML = "<p>No offers available.</p>";
+          return;
+        }
+        offers.forEach(offer => {
+          const originalPriceValue = parseFloat(offer.originalPrice) || 0;
+          const offerPriceValue = parseFloat(offer.offerPrice) || 0;
+          const offerItemDiv = document.createElement("div");
+          offerItemDiv.classList.add("offer-item");
+          offerItemDiv.innerHTML = `
+            <h3>${offer.itemName}</h3>
+            <p class="original-price">₹${originalPriceValue.toFixed(2)}</p>
+            <p class="offer-price">₹${offerPriceValue.toFixed(2)}</p>
+            <button onclick="showUpdateForm('${offer._id}', ${offerPriceValue})">Update</button>
+            <button onclick="deleteOffer('${offer._id}')">Delete</button>
+            <div id="update-form-${offer._id}" class="update-form" style="display: none;">
+              <input type="number" id="update-offer-price-${offer._id}" placeholder="New Offer Price" step="0.01" value="${offerPriceValue.toFixed(2)}" style="margin: 5px 0; padding: 8px; width: 100%; border-radius: 5px; border: 1px solid #ccc;">
+              <button onclick="updateOffer('${offer._id}')" style="background-color: #ff6f61; color: #fff; padding: 8px; border: none; border-radius: 5px; cursor: pointer;">Save</button>
+              <button onclick="hideUpdateForm('${offer._id}')" style="background-color: #ccc; padding: 8px; border: none; border-radius: 5px; cursor: pointer; margin-left: 5px;">Cancel</button>
+            </div>
+          `;
+          offerList.appendChild(offerItemDiv);
+        });
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+        offerList.innerHTML = `<p>Failed to load offers: ${error.message}</p>`;
+      }
+    }
+  
+    async function addOffer() {
+      const itemId = document.getElementById("itemId").value;
+      const offerPrice = document.getElementById("offerPrice").value;
+      const originalPrice = parseFloat(document.getElementById("originalPrice").value);
+      if (!itemId || !offerPrice) {
+        alert("Please select an item and enter an offer price.");
+        return;
+      }
+      if (parseFloat(offerPrice) >= originalPrice) {
+        alert("Offer price must be less than the original price.");
+        return;
+      }
+      try {
+        const res = await fetch("http://localhost:5001/admin/offers/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-email": email },
+          body: JSON.stringify({ itemId, offerPrice })
+        });
+        const data = await res.json();
+        alert(data.message || "Offer added successfully");
+        fetchOffers();
+        document.getElementById("offerPrice").value = "";
+      } catch (error) {
+        console.error("Error adding offer:", error);
+        alert("Failed to add offer. Please try again.");
+      }
+    }
+  
+    function showUpdateForm(id, offerPrice) {
+      console.log(`Showing update form for offer ID: ${id}`);
+      const form = document.getElementById(`update-form-${id}`);
+      form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+  
+    function hideUpdateForm(id) {
+      const form = document.getElementById(`update-form-${id}`);
+      form.style.display = "none";
+    }
+  
+    async function updateOffer(id) {
+      const offerPriceInput = document.getElementById(`update-offer-price-${id}`);
+      const offerPrice = offerPriceInput.value;
+      if (!offerPrice || isNaN(offerPrice) || parseFloat(offerPrice) <= 0) {
+        alert("Please enter a valid offer price greater than 0.");
+        return;
+      }
+      try {
+        const res = await fetch(`http://localhost:5001/admin/offers/update/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "x-admin-email": email },
+          body: JSON.stringify({ offerPrice: parseFloat(offerPrice) })
+        });
+        if (!res.ok) throw new Error(`Failed to update offer: ${res.statusText}`);
+        const data = await res.json();
+        alert(data.message || "Offer updated successfully");
+        fetchOffers();
+        hideUpdateForm(id);
+      } catch (error) {
+        console.error("Error updating offer:", error);
+        alert("Failed to update offer. Please try again.");
+      }
+    }
+  
+    async function deleteOffer(id) {
+      if (confirm("Are you sure you want to delete this offer?")) {
+        try {
+          const res = await fetch(`http://localhost:5001/admin/offers/delete/${id}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json", "x-admin-email": email }
+          });
+          const data = await res.json();
+          alert(data.message || "Offer deleted successfully");
+          fetchOffers();
+        } catch (error) {
+          console.error("Error deleting offer:", error);
+          alert("Failed to delete offer. Please try again.");
+        }
+      }
+    }
+  
+    function logout() {
+      localStorage.clear();
+      window.location.href = "admin_login.html";
+    }
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchMenuItemsForDropdown();
+      fetchOffers();
+    });
+  </script>
+</body>
+</html>

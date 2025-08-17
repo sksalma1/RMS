@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Your existing styles remain unchanged */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: right;
+            min-height: 100vh;
+            padding: 10px;
+            gap: 20px;
+            background-color: #f4f4f4;
+        }
+        
+        .img-con {
+            flex: 1;
+            position: relative;
+            background: url("food.jpg") no-repeat center center/cover;
+            border-radius: 25px;
+        }
+        
+        .img-con::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(4px);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 630px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(rgb(169, 169, 233), rgb(218, 141, 154), rgb(199, 117, 199));
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+        }
+        
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        
+        .io {
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: 0.3s;
+        }
+        
+        .io:focus {
+            outline: none;
+            border-bottom: 1px solid white;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, rgb(178, 79, 178), rgb(243, 131, 149));
+            width: 200px;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 40px;
+            border: none;
+            transition: 0.3s;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .forgot-password a {
+            color: white;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password a:hover {
+            color: #e0e0e0;
+            text-decoration: underline;
+        }
+        
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .signup-link a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        .signup-link a:hover {
+            color: #e0e0e0;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, rgb(143, 56, 143), rgb(218, 104, 123));
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+        
+            .img-con {
+                display: none;
+            }
+        
+            .container {
+                width: 90%;
+                height: auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="img-con"></div>
+    <div class="container">
+        <h1>Login</h1>
+        
+        <form id="login-form">
+            <div class="input-container">
+                <label for="email">Email</label>
+                <input class="io" type="email" id="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="input-container">
+                <label for="password">Password</label>
+                <input class="io" type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="forgot-password">
+                <a href="forgot.html">Forgot Password?</a>
+            </div>
+
+            <div class="btn-container">
+                <input type="submit" class="btn" value="Login">
+            </div>
+
+            <div class="signup-link">
+                Don't have an account? <a href="signup.html">Sign Up</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", async (event) => {
+            event.preventDefault(); // Prevent form reload
+    
+            // Get user input
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+    
+            if (!email || !password) {
+                alert("Please fill in all fields.");
+                return;
+            }
+    
+            try {
+                // Send login request
+                const response = await fetch("http://localhost:5000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+    
+                const result = await response.json(); // Parse JSON response
+                console.log("Login Response:", result); // Debugging
+    
+                if (response.ok) {
+                    // Clear previous localStorage to avoid stale data
+                    localStorage.clear();
+                    
+                    // Store user info in localStorage with consistent key
+                    localStorage.setItem("userEmail", result.email); // Consistent with profile.html
+                    localStorage.setItem("name", result.name);
+                    
+                    console.log("Stored userEmail:", localStorage.getItem("userEmail")); // Debug log
+                    
+                    alert("Login successful!");
+                    window.location.href = "home.html"; // Redirect to homepage
+                } else {
+                    alert(result.message || "Invalid credentials. Try again.");
+                }
+            } catch (error) {
+                console.error("Login error:", error);
+                alert("An error occurred. Please try again later.");
+            }
+        });
+    </script>
+</body>
+</html>

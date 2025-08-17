@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #1a2a44;
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo {
+            color: #fff;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .nav-links li {
+            margin-left: 2.5rem;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ff6f61;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: calc(100vh - 60px);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("background.jpg") no-repeat center center/cover;
+            filter: blur(2px);
+            z-index: -1;
+            transform: scale(1.1);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-content .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .hero-content .btn {
+            background-color: #ff6f61;
+            color: #fff;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .hero-content .btn.admin-btn {
+            background-color: #1a2a44;
+        }
+
+        .hero-content .btn:hover {
+            background-color: #e65b50;
+        }
+
+        .hero-content .btn.admin-btn:hover {
+            background-color: #ff6f61;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 3rem;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            color: #1a2a44;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background-color: #f9f9f9;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1a2a44;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 6rem 3rem;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1a2a44;
+        }
+
+        .contact p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #666;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact .btn {
+            background-color: #1a2a44;
+            color: #fff;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .contact .btn:hover {
+            background-color: #ff6f61;
+        }
+
+        #contact-info {
+            display: flex;
+            justify-content: space-between;
+        }
+    
+        .contact-details {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+    
+        .contact-section {
+            width: 48%;
+        }
+    
+        .contact-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    
+        .contact-section li {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a2a44;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            font-weight: 300;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #ff6f61;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #e65b50;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem 1.5rem;
+            }
+
+            .navbar .nav-links li {
+                margin-left: 1.5rem;
+            }
+
+            .hero {
+                height: calc(100vh - 50px);
+                margin-top: 50px;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .hero-content .btn-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features h2, .contact h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">RMS</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="admin_login.html">Admin Login</a></li>
+            <li><a href="login.html">User Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Elevate Your Restaurant Operations</h1>
+            <p>Streamline workflows, optimize efficiency, and grow your business with our advanced restaurant management solution. Whether you're an admin managing operations or a user enjoying our services, RMS has you covered!</p>
+            <div class="btn-group">
+                <a href="admin_login.html" class="btn admin-btn">Admin Login</a>
+                <a href="login.html" class="btn">User Login</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2>Powerful Features for Your Success</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Order Management</h3>
+                <p>Seamlessly manage orders, track statuses, and optimize kitchen workflows.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Table Reservation</h3>
+                <p>Allow customers to reserve tables online and avoid wait times with real-time availability updates.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Customer Analytics</h3>
+                <p>Gain insights into customer preferences and improve your marketing strategies.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>Get in Touch</h2>
+        <p>Ready to transform your restaurant? Contact us today to schedule a demo or get support.</p>
+        <a href="javascript:void(0);" class="btn" onclick="toggleContactInfo()">Contact Us</a>
+
+        <!-- Hidden contact information that will be toggled -->
+        <div id="contact-info" style="display: none; margin-top: 2rem;">
+            <div class="contact-details">
+                <div class="contact-section">
+                    <p><strong>Phone Numbers:</strong></p>
+                    <ul>
+                        <li>+1 (555) 123-4567</li>
+                        <li>+1 (555) 987-6543</li>
+                    </ul>
+                </div>
+                <div class="contact-section">
+                    <p><strong>Emails:</strong></p>
+                    <ul>
+                        <li>info@restaurant.com</li>
+                        <li>support@restaurant.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Restaurant Management System. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        function toggleContactInfo() {
+            const contactInfo = document.getElementById('contact-info');
+            if (contactInfo.style.display === "none") {
+                contactInfo.style.display = "block";
+            } else {
+                contactInfo.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

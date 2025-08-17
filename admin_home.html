@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f8f9fa;
+    }
+
+    .navbar {
+      background-color: #343a40;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+    }
+
+    .admin-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-container h3 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .admin-options {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .admin-btn {
+      text-align: center;
+      padding: 15px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .admin-btn:hover {
+      background-color: #0056b3;
+    }
+
+    /* Footer */
+    footer {
+        background-color: #1a2a44;
+        color: #fff;
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 300;
+        margin-top: 3rem;
+    }
+
+    footer a {
+        color: #ff6f61;
+        text-decoration: none;
+        margin: 0 10px;
+        transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: #e65b50;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <h2>Restaurant Admin Panel</h2>
+  </nav>
+
+  <div class="admin-container">
+    <h3>Welcome, Admin!</h3>
+    <div class="admin-options">
+      <a href="admin_menu.html" class="admin-btn">➕ Add New Menu Item</a>
+      <a href="admin_offers.html" class="admin-btn">🎁 Add Offers</a>
+      <a href="admin_tables.html" class="admin-btn">🍽️ Add Tables</a>
+      <a href="admin_events.html" class="admin-btn">🎉 Add Events</a>
+      <a href="inventory.html" class="admin-btn">📦 Update Inventory</a>
+    </div>
+  </div>
+  <footer>
+    <p>© 2025 Restaurant Management System. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+</body>
+</html>

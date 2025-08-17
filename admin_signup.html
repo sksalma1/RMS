@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Signup - RMS Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; 
+        }
+        body { 
+            background-color: #f9f9f9; 
+            color: #333; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+        }
+        .signup-container { 
+            background-color: #fff; 
+            padding: 2rem; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+        }
+        .signup-container h1 { 
+            font-size: 2rem; 
+            color: #1a2a44; 
+            margin-bottom: 1.5rem; 
+        }
+        .signup-container input { 
+            width: 100%; 
+            padding: 0.8rem; 
+            margin: 0.5rem 0; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            font-size: 1rem; 
+            outline: none; 
+        }
+        .signup-container button { 
+            width: 100%; 
+            padding: 0.8rem; 
+            margin-top: 1rem; 
+            background-color: #ff6f61; 
+            color: #fff; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease; 
+        }
+        .signup-container button:hover { 
+            background-color: #e65b50; 
+        }
+        .signup-container p { 
+            margin-top: 1rem; 
+            font-size: 0.9rem; 
+            color: #666; 
+        }
+        .signup-container a { 
+            color: #ff6f61; 
+            text-decoration: none; 
+        }
+        .signup-container a:hover { 
+            color: #e65b50; 
+        }
+        .error { 
+            color: #e65b50; 
+            font-size: 0.9rem; 
+            margin-top: 0.5rem; 
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h1>Admin Signup</h1>
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="tel" id="phone" placeholder="Phone Number" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="text" id="adminCode" placeholder="Admin Code" required>
+        <button onclick="signup()">Sign Up</button>
+        <p>Already have an account? <a href="admin_login.html">Login</a></p>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        async function signup() {
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const adminCode = document.getElementById("adminCode").value.trim();
+            const errorDiv = document.getElementById("error");
+
+            if (!name || !email || !phone || !password || !adminCode) {
+                errorDiv.textContent = "Please fill in all fields.";
+                return;
+            }
+
+            try {
+                const res = await fetch("http://localhost:5001/admin/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, phone, password, adminCode })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert(data.message);
+                    window.location.href = "admin_login.html";
+                } else {
+                    errorDiv.textContent = data.message || "Signup failed.";
+                }
+            } catch (err) {
+                errorDiv.textContent = "Network error. Please try again.";
+                console.error("Signup error:", err);
+            }
+        }
+    </script>
+</body>
+</html>

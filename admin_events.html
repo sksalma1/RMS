@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Event Halls - RMS Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #f4f4f4;
+            padding: 0;
+            margin: 0;
+        }
+        .navbar {
+            background-color: #1a2a44;
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar .logo {
+            color: #fff;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+        .navbar .nav-links li {
+            margin-left: 2rem;
+        }
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+        .navbar .nav-links a:hover {
+            color: #ff6f61;
+        }
+        h1 {
+            text-align: center;
+            color: #1a2a44;
+            margin-top: 80px;
+        }
+        .form-container, .items-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #ff6f61;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e65b50;
+        }
+        .hall-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .hall-item button {
+            width: auto;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+        /* Footer */
+        footer {
+            background-color: #1a2a44;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            font-weight: 300;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #ff6f61;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #e65b50;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">RMS Admin</div>
+        <ul class="nav-links">
+            <li><a href="admin_home.html">Home</a></li>
+            <li><a href="admin_menu.html">Menu</a></li>
+            <li><a href="admin_tables.html">Tables</a></li>
+            <li><a href="admin_offers.html">Offers</a></li>
+            <li><a href="inventory.html">INVENTORY</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <h1>Manage Event Halls</h1>
+
+    <div class="form-container">
+        <h2>Add New Event Hall</h2>
+        <input type="text" id="name" placeholder="Hall Name">
+        <input type="number" id="capacity" placeholder="Capacity">
+        <input type="number" id="pricePerHour" placeholder="Price per Hour" step="0.01">
+        <label style="display: flex; gap: 0px;">
+            Available<input type="checkbox" id="available" checked>
+        </label>
+          
+        <button onclick="addEventHall()">Add Event Hall</button>
+    </div>
+
+    <div class="items-container" id="hall-list"></div>
+
+    <footer>
+        <p>© 2025 Restaurant Management System. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+    <script>
+        const email = localStorage.getItem("adminEmail");
+        if (!email) window.location.href = "admin_login.html";
+
+        async function fetchEventHalls() {
+            const res = await fetch("http://localhost:5000/eventhalls");
+            const halls = await res.json();
+            const container = document.getElementById("hall-list");
+            container.innerHTML = halls.map(hall => `
+            <div class="hall-item" id="hall-${hall._id}">
+                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <img src="${hall.image}" alt="${hall.name}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                    <div>
+                        <span id="info-${hall._id}">
+                            <strong>${hall.name}</strong><br>
+                            Capacity: ${hall.capacity}<br>
+                            Price: ₹${hall.pricePerHour}/hr<br>
+                            Available: ${hall.available ? "Yes" : "No"}
+                        </span>
+                    </div>
+                </div>
+                <div id="buttons-${hall._id}">
+                    <button onclick="enableEdit('${hall._id}', '${hall.name}', '${hall.capacity}', '${hall.pricePerHour}', ${hall.available})">Update</button>
+                    <button onclick="deleteEventHall('${hall._id}')">Delete</button>
+                </div>
+            </div>
+        `).join("");
+
+        }
+        
+
+        async function addEventHall() {
+            const name = document.getElementById("name").value;
+            const capacity = document.getElementById("capacity").value;
+            const pricePerHour = document.getElementById("pricePerHour").value;
+            const available = document.getElementById("available").checked;
+
+            const res = await fetch("http://localhost:5001/admin/eventhalls/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, name, capacity, pricePerHour, available })
+            });
+            const data = await res.json();
+            alert(data.message);
+            fetchEventHalls();
+        }
+
+        function enableEdit(id, name, capacity, pricePerHour, available) {
+            const hallDiv = document.getElementById(`hall-${id}`);
+            hallDiv.innerHTML = `
+                <div class="hall-item">
+                    <input type="text" id="edit-name-${id}" value="${name}">
+                    <input type="number" id="edit-capacity-${id}" value="${capacity}">
+                    <input type="number" id="edit-price-${id}" value="${pricePerHour}" step="0.01">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <span>Available</span>
+                        <input type="checkbox" id="edit-available-${id}" ${available ? 'checked' : ''}>
+                    </label>
+                    <button onclick="saveUpdate('${id}')">Save</button>
+                    <button onclick="fetchEventHalls()">Cancel</button>
+                </div>
+            `;
+        }
+        
+
+        async function saveUpdate(id) {
+            const name = document.getElementById(`edit-name-${id}`).value;
+            const capacity = document.getElementById(`edit-capacity-${id}`).value;
+            const pricePerHour = document.getElementById(`edit-price-${id}`).value;
+            const available = document.getElementById(`edit-available-${id}`).checked;
+        
+            const res = await fetch(`http://localhost:5001/admin/eventhalls/update/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, name, capacity, pricePerHour, available })
+            });
+        
+            const data = await res.json();
+            alert(data.message);
+            fetchEventHalls();
+        }
+        
+
+        async function deleteEventHall(id) {
+            if (confirm("Are you sure you want to delete this event hall?")) {
+                const res = await fetch(`http://localhost:5001/admin/eventhalls/delete/${id}`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                alert(data.message);
+                fetchEventHalls();
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "admin_login.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchEventHalls);
+    </script>
+</body>
+</html>

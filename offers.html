@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User - View Offers - RMS Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .navbar {
+            background-color: #1a2a44;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo {
+            color: #fff;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ff6f61;
+        }
+
+        .offers-container {
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 2rem;
+        }
+
+        .restaurant-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .restaurant-header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #1a2a44;
+        }
+
+        .offer-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .offer-item {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .offer-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .offer-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background-color: #f0f0f0; /* Placeholder background if image fails */
+        }
+
+        .offer-item .item-details h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .original-price {
+            font-size: 0.9rem;
+            color: #666;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+        }
+
+        .offer-price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ff6f61;
+            margin-bottom: 10px;
+        }
+
+        .add-to-cart {
+            background-color: #ff6f61;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .add-to-cart:hover {
+            background-color: #e65b50;
+        }
+
+        footer {
+            background-color: #1a2a44;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            font-weight: 300;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #ff6f61;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #e65b50;
+        }
+
+        @media (max-width: 768px) {
+            .offer-items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .navbar .nav-links {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+            }
+            .navbar .nav-links li {
+                margin: 0.5rem 0;
+            }
+            .offer-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">RMS</div>
+        <ul class="nav-links">
+            <li><a href="home.html">HOME</a></li>
+            <li><a href="menu.html">MENU</a></li>
+            <li><a href="dinein.html">DINE IN</a></li>
+            <li><a href="cart.html">CART</a></li>
+            <li><a href="#" onclick="logout()">LOGOUT</a></li>
+        </ul>
+    </nav>
+
+    <div class="offers-container">
+        <div class="restaurant-header">
+            <h1>Special Offers</h1>
+        </div>
+        <div id="offer-list" class="offer-items"></div>
+    </div>
+
+    <footer>
+        <p>© 2025 Restaurant Management System. All rights reserved. | 
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Terms of Service</a>
+        </p>
+    </footer>
+
+    <script>
+        // Check if user is logged in
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+            console.warn("No user email found, redirecting to login");
+            window.location.href = "login.html";
+        }
+    
+        // Fetch and display offers
+        async function fetchOffers() {
+            const offerList = document.getElementById("offer-list");
+            if (!offerList) {
+                console.error("Element 'offer-list' not found in DOM");
+                return;
+            }
+    
+            try {
+                console.log("Fetching offers from server...");
+                const response = await fetch("http://localhost:5000/offers", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+                }
+    
+                const offers = await response.json();
+                console.log("Received offers:", offers);
+    
+                offerList.innerHTML = "";
+    
+                if (!Array.isArray(offers) || offers.length === 0) {
+                    console.log("No offers available");
+                    offerList.innerHTML = '<p style="text-align: center; color: #666;">No special offers available.</p>';
+                    return;
+                }
+    
+                offers.forEach(offer => {
+                    // Validate offer
+                    if (!offer.itemName || !offer.offerPrice || !offer.originalPrice) {
+                        console.warn("Skipping invalid offer:", offer);
+                        return;
+                    }
+    
+                    // Parse prices
+                    const originalPrice = parseFloat(offer.originalPrice.replace('₹', '')) || 0;
+                    const offerPrice = parseFloat(offer.offerPrice.replace('₹', '')) || 0;
+    
+                    // Validate image
+                    const imageUrl = offer.image && /^https?:\/\//i.test(offer.image)
+                        ? offer.image
+                        : "https://via.placeholder.com/100";
+    
+                    console.log(`Rendering offer: ${offer.itemName}`, {
+                        imageUrl,
+                        originalPrice,
+                        offerPrice,
+                        itemId: offer.itemId || "N/A"
+                    });
+    
+                    // Create offer card
+                    const offerItem = document.createElement("div");
+                    offerItem.className = "offer-item";
+                    offerItem.innerHTML = `
+                        <img src="${imageUrl}" alt="${offer.itemName}" 
+                             style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;"
+                             onerror="this.src='https://via.placeholder.com/100'; console.warn('Failed to load image for ${offer.itemName}: ${imageUrl}')">
+                        <div class="item-details">
+                            <h3 style="font-size: 1.2rem; margin: 0.5rem 0;">${offer.itemName}</h3>
+                            ${originalPrice > offerPrice ? `<p class="original-price">₹${originalPrice.toFixed(2)}</p>` : ""}
+                            <p class="offer-price">₹${offerPrice.toFixed(2)}</p>
+                            <button class="add-to-cart" 
+                                    data-id="${offer.itemId || ""}" 
+                                    data-name="${offer.itemName}" 
+                                    data-price="${offerPrice}">
+                                Add to Cart
+                            </button>
+                        </div>
+                    `;
+    
+                    offerList.appendChild(offerItem);
+                });
+    
+                // Add event listeners for cart buttons
+                document.querySelectorAll(".add-to-cart").forEach(button => {
+                    button.addEventListener("click", async () => {
+                        const itemId = button.dataset.id;
+                        const itemName = button.dataset.name;
+                        const itemPrice = parseFloat(button.dataset.price);
+    
+                        console.log("Add to cart clicked:", { itemId, itemName, itemPrice });
+                        await addToCart(itemId, itemName, itemPrice);
+                    });
+                });
+            } catch (error) {
+                console.error("Error fetching offers:", error.message);
+                offerList.innerHTML = '<p style="text-align: center; color: #ff6f61;">Failed to load offers. Please try again.</p>';
+            }
+        }
+    
+        // Add item to cart
+        async function addToCart(itemId, itemName, itemPrice) {
+            if (!email) {
+                console.warn("No email found, redirecting to login");
+                alert("Please log in to add items to cart.");
+                window.location.href = "login.html";
+                return;
+            }
+    
+            if (!itemName || isNaN(itemPrice) || itemPrice <= 0) {
+                console.error("Invalid cart data:", { itemId, itemName, itemPrice });
+                alert("Invalid item details.");
+                return;
+            }
+    
+            // If itemId is missing, use itemName as fallback for cart
+            const cartData = itemId ? { email, itemId, name: itemName, price: itemPrice }
+                                   : { email, name: itemName, price: itemPrice };
+    
+            try {
+                const response = await fetch("http://localhost:5000/cart/add", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(cartData)
+                });
+    
+                const data = await response.json();
+                if (data.success) {
+                    console.log(`Added ${itemName} to cart`);
+                    alert(`${itemName} added to cart!`);
+                } else {
+                    console.error("Cart error:", data.message);
+                    alert(`Failed to add ${itemName}: ${data.message || "Unknown error"}`);
+                }
+            } catch (error) {
+                console.error("Error adding to cart:", error.message);
+                alert("Error adding item to cart.");
+            }
+        }
+    
+        // Logout function
+        function logout() {
+            console.log("Logging out user:", email);
+            localStorage.removeItem("userEmail");
+            window.location.href = "index.html";
+        }
+    
+        // Initialize
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Offers page loaded, fetching offers...");
+            fetchOffers();
+        });
+    </script>
+</body>
+</html>
